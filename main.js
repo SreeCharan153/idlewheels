@@ -1,88 +1,104 @@
-let menu = document.querySelector('.menu-icon');
-let navbar = document.querySelector(".navbar");
-menu.onclick = () => {
-    menu.classList.toggle("move");
-    navbar.classList.toggle("open-menu")
-};
-//close menu
-window.onscroll = () => {
-    menu.classList.remove("move");
-    navbar.classList.classList.remove("open-menu");
-}
-window.onload = () => {
-    let today = new Date().toISOString().split('T')[0];
-    document.getElementById('start-date').value =today;
-    document.getElementById('return-date').value= new Date(
-        Date.now() * 7 * 9990000
-    )
-    .toISOString()
-    .split('T')[0];
-}
-// animation
-const animate = ScrollReveal({
-    origin:'top',
-    distance: '60px',
-    duration: '2500',
-    delay: '400',
-})
-animate.reveal(".nav,.heading");
-animate.reveal(".home-img img",{origin:"right"});
-animate.reveal(".input-form",{origin:"bottom"});
-animate.reveal(".rental-box",{interval:100});
-function showregister(){
-    document.getElementById("login-section").style.display="none";
-    document.getElementById("register-section").style.display="flex";
-}
-function showlogin(){
-    document.getElementById("register-section").style.display="none";
-    document.getElementById("login-section").style.display="flex";
-}
-function showregisteralert(){
-    let registeralert=document.getElementById("alertbox");
-    registeralert.style.display="block";
-    setTimeout(function() {
-        registeralert.style.display="none";
+// Wait until DOM is fully loaded
+window.addEventListener("DOMContentLoaded", () => {
+
+  // ---------------- MENU TOGGLE ----------------
+  const menu = document.querySelector(".menu-icon");
+  const navbar = document.querySelector(".navbar");
+
+  if (menu && navbar) {
+    menu.onclick = () => {
+      menu.classList.toggle("move");
+      navbar.classList.toggle("open-menu");
+    };
+
+    // Close menu on scroll
+    window.addEventListener("scroll", () => {
+      menu.classList.remove("move");
+      navbar.classList.remove("open-menu");
+    });
+  }
+
+  // ---------------- DATE SETUP ----------------
+  const startDateInput = document.getElementById("start-date");
+  const returnDateInput = document.getElementById("return-date");
+
+  if (startDateInput && returnDateInput) {
+    const today = new Date();
+    startDateInput.value = today.toISOString().split("T")[0];
+
+    const returnDate = new Date();
+    returnDate.setDate(returnDate.getDate() + 7);
+    returnDateInput.value = returnDate.toISOString().split("T")[0];
+  }
+
+  // ---------------- SCROLL ANIMATION ----------------
+  if (typeof ScrollReveal !== "undefined") {
+    const animate = ScrollReveal({
+      origin: "top",
+      distance: "60px",
+      duration: 2500,
+      delay: 400,
+    });
+
+    animate.reveal(".nav, .heading");
+    animate.reveal(".home-img img", { origin: "right" });
+    animate.reveal(".input-form", { origin: "bottom" });
+    animate.reveal(".rental-box", { interval: 100 });
+  }
+
+  // ---------------- AUTH SECTIONS ----------------
+  window.showregister = function () {
+    const loginSection = document.getElementById("login-section");
+    const registerSection = document.getElementById("register-section");
+    if (loginSection && registerSection) {
+      loginSection.style.display = "none";
+      registerSection.style.display = "flex";
+    }
+  };
+
+  window.showlogin = function () {
+    const loginSection = document.getElementById("login-section");
+    const registerSection = document.getElementById("register-section");
+    if (loginSection && registerSection) {
+      registerSection.style.display = "none";
+      loginSection.style.display = "flex";
+    }
+  };
+
+  window.showregisteralert = function () {
+    const registeralert = document.getElementById("alertbox");
+    if (!registeralert) return;
+
+    registeralert.style.display = "block";
+
+    setTimeout(() => {
+      registeralert.style.display = "none";
+      showlogin();
     }, 4000);
-    setTimeout(function() {
-        showlogin();
-    }, 4000);
-}
-let username = document.getElementById("username");
-let email = document.getElementById("email");
-let password = document.getElementById("password");
-let registerbtn = document.getElementById("registerbtn");
+  };
 
-function checkinputs(){
+  // ---------------- FORM VALIDATION ----------------
+  const registerForm = document.getElementById("registerform");
+  const registerBtn = document.getElementById("registerbtn");
 
-    if(
-        username.value.trim() !== "" &&
-        email.value.trim() !== "" &&
-        password.value.trim() !== ""
-    ){
-        registerbtn.disabled = false;
-        registerbtn.style.opacity="1";
-        registerbtn.style.cursor="pointer";
-    }
-    else{
-        registerbtn.disabled = true;
-    }
+  if (registerForm && registerBtn) {
+    const updateButtonState = () => {
+      if (registerForm.checkValidity()) {
+        registerBtn.disabled = false;
+        registerBtn.style.opacity = "1";
+        registerBtn.style.cursor = "pointer";
+      } else {
+        registerBtn.disabled = true;
+        registerBtn.style.opacity = "0.5";
+        registerBtn.style.cursor = "not-allowed";
+      }
+    };
 
-}
+    // Initial state
+    updateButtonState();
 
-username.addEventListener("input", checkinputs);
-email.addEventListener("input", checkinputs);
-password.addEventListener("input", checkinputs);
-const registerform=document.getElementById('registerform');
-registerform.addEventListener('input', () => {
-    if(registerform.checkValidity()){
-        registerbtn.disabled = false;
-        registerbtn.style.opacity="1";
-        registerbtn.style.cursor="pointer";
-    }
-    else{
-        registerbtn= true;
-    }
-})
+    // Listen for changes
+    registerForm.addEventListener("input", updateButtonState);
+  }
 
-
-
+});
