@@ -80,6 +80,21 @@ window.addEventListener("DOMContentLoaded", () => {
   // ---------------- FORM VALIDATION ----------------
   const registerForm = document.getElementById("registerform");
   const registerBtn = document.getElementById("registerbtn");
+  const loginForm = document.getElementById("loginsection");
+  const loginBtn = document.getElementById("loginbtn");
+
+  if (loginForm && loginBtn) {
+    const updateLoginState = () => {
+      const isValid = loginForm.checkValidity();
+      loginBtn.disabled = !isValid;
+      loginBtn.style.opacity = isValid ? "1" : "0.5";
+      loginBtn.style.cursor = isValid ? "pointer" : "not-allowed";
+    };
+
+    updateLoginState();
+    loginForm.addEventListener("input", updateLoginState);
+    loginForm.addEventListener("submit", (event) => event.preventDefault());
+  }
 
   if (registerForm && registerBtn) {
     const updateButtonState = () => {
@@ -99,6 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // Listen for changes
     registerForm.addEventListener("input", updateButtonState);
+    registerForm.addEventListener("submit", (event) => event.preventDefault());
   }
 
 });
